@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    #tutorial {
+      border: 1px solid black;
+    }
+  </style>
+  <body>
+    <canvas id="tutorial" width="500" height="500"
+      >This browser does not support canvas.</canvas
+    >
+
+    <script>
+      var canvas = document.getElementById("tutorial");
+      var ctx = canvas.getContext("2d");
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      ctx.strokeStyle = "#BADA55";
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+
+      let isDrawing = false;
+      let lastX = 0;
+      let lastY = 0;
+      let hue = 0;
+      let direction = true;
+
+      canvas.addEventListener("mousedown", (e) => {
+        isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+        ctx.lineWidth = 10;
+      });
+      canvas.addEventListener("mouseup", (e) => (isDrawing = false));
+      canvas.addEventListener("mouseout", (e) => (isDrawing = false));
+
+      canvas.addEventListener("mousemove", draw);
+
+      function draw(e) {
+        if (!isDrawing) return;
+
+        ctx.strokeStyle = `hsl(${hue},100%,50%)`;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+
+        if (ctx.lineWidth >= 70 || ctx.lineWidth <= 1) {
+          direction = !direction;
+        }
+        if (direction) {
+            ctx.lineWidth+=0.2
+        }else{
+            ctx.lineWidth-=0.2
+        }
+        hue += 0.5;
+        if (hue > 360) {
+          hue = 0;
+        }
+      }
+    </script>
+  </body>
+</html>
